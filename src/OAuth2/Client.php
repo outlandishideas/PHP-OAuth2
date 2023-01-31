@@ -435,7 +435,6 @@ class Client
                        $url .= '?' . $parameters;
                    }
                 }
-                $curl_options[CURLOPT_POSTFIELDS] = $parameters;
                 break;
             case self::HTTP_METHOD_HEAD:
                 $curl_options[CURLOPT_NOBODY] = true;
