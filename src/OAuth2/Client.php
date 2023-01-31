@@ -421,8 +421,19 @@ class Client
                  * while passing a URL-encoded string will encode the data as application/x-www-form-urlencoded.
                  * http://php.net/manual/en/function.curl-setopt.php
                  */
-                if(is_array($parameters) && self::HTTP_FORM_CONTENT_TYPE_APPLICATION === $form_content_type) {
-                    $parameters = http_build_query($parameters, '', '&');
+                if(strpos($http_headers['Content-Type'], 'x-www-form-urlencoded') !== false) {
+                   if(is_array($parameters) && self::HTTP_FORM_CONTENT_TYPE_APPLICATION === $form_content_type) {
+                       $parameters = http_build_query($parameters, null, '&');
+                   }
+                   $curl_options[CURLOPT_POSTFIELDS] = $parameters;
+                } else {
+                   $curl_options[CURLOPT_POSTFIELDS] = json_encode($parameters);
+
+                   if (is_array($parameters) && count($parameters) > 0) {
+                       $url .= '?' . http_build_query($parameters, null, '&');
+                   } elseif ($parameters) {
+                       $url .= '?' . $parameters;
+                   }
                 }
                 $curl_options[CURLOPT_POSTFIELDS] = $parameters;
                 break;
