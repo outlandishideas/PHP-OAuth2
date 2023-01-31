@@ -429,10 +429,12 @@ class Client
                 } else {
                    $curl_options[CURLOPT_POSTFIELDS] = json_encode($parameters);
 
-                   if (is_array($parameters) && count($parameters) > 0) {
-                       $url .= '?' . http_build_query($parameters, null, '&');
-                   } elseif ($parameters) {
-                       $url .= '?' . $parameters;
+                   if ($http_method != self::HTTP_METHOD_POST) {
+                     if (is_array($parameters) && count($parameters) > 0) {
+                         $url .= '?' . http_build_query($parameters, null, '&');
+                     } elseif ($parameters) {
+                         $url .= '?' . $parameters;
+                     }
                    }
                 }
                 break;
